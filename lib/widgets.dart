@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinbox/material.dart';
 import 'package:frc_scouting_app/constants.dart';
@@ -56,22 +55,15 @@ class _DropdownListTileState extends State<DropdownListTile> {
   }
 
   void _getData() async {
-    CollectionReference collection = FirebaseFirestore.instance.collection("${Constants.year}${Globals.currentEvent!.eventCode}");
-    DocumentSnapshot<Object?> data = await collection.doc("${widget.team}").get();
-    try {
-      if (data.get(widget.id) != null) {
-        widget.currentChoice = data.get(widget.id);
-      }
-    }
-    catch(e) {
-      collection.doc("${widget.team}").update({
-        widget.id: widget.currentChoice
-      });
-    }
-
-    setState(() {
-
-    });
+    // CollectionReference collection = FirebaseFirestore.instance.collection("${Constants.year}${Globals.currentEvent!.eventCode}");
+    // // DocumentSnapshot<Object?> data = await collection.doc("${widget.team}").get();
+    // collection.doc("${widget.team}").update({
+    //   widget.id: widget.currentChoice
+    // });
+    //
+    // setState(() {
+    //
+    // });
   }
 
   @override
@@ -87,12 +79,12 @@ class _DropdownListTileState extends State<DropdownListTile> {
           setState(() {
             widget.currentChoice = (s == null ? "" : s);
           });
-          if (Globals.currentEvent != null) {
-            CollectionReference collection = FirebaseFirestore.instance.collection("${Constants.year}${Globals.currentEvent!.eventCode}");
-            collection.doc("${widget.team}").update({
-              widget.id: widget.currentChoice
-            });
-          }
+          // if (Globals.currentEvent != null) {
+          //   CollectionReference collection = FirebaseFirestore.instance.collection("${Constants.year}${Globals.currentEvent!.eventCode}");
+          //   collection.doc("${widget.team}").update({
+          //     widget.id: widget.currentChoice
+          //   });
+          // }
         },
         value: widget.currentChoice,
       ),
@@ -126,22 +118,15 @@ class _NumberListTileState extends State<NumberListTile> {
   }
 
   void _getData() async {
-    CollectionReference collection = FirebaseFirestore.instance.collection("${Constants.year}${Globals.currentEvent!.eventCode}");
-    DocumentSnapshot<Object?> data = await collection.doc("${widget.team}").get();
-    try {
-      if (data.get(widget.id) != null) {
-        widget.currentValue = data.get(widget.id);
-      }
-    }
-    catch(e) {
-      collection.doc("${widget.team}").update({
-        widget.id: widget.currentValue
-      });
-    }
-
-    setState(() {
-
-    });
+    // CollectionReference collection = FirebaseFirestore.instance.collection("${Constants.year}${Globals.currentEvent!.eventCode}");
+    // DocumentSnapshot<Object?> data = await collection.doc("${widget.team}").get();
+    // collection.doc("${widget.team}").update({
+    //   widget.id: widget.currentValue
+    // });
+    //
+    // setState(() {
+    //
+    // });
   }
 
   @override
@@ -166,12 +151,12 @@ class _NumberListTileState extends State<NumberListTile> {
               setState(() {
                 widget.currentValue = d == null ? widget.currentValue : d;
               });
-              if (Globals.currentEvent != null) {
-                CollectionReference collection = FirebaseFirestore.instance.collection("${Constants.year}${Globals.currentEvent!.eventCode}");
-                collection.doc("${widget.team}").update({
-                  widget.id: widget.currentValue
-                });
-              }
+              // if (Globals.currentEvent != null) {
+              //   CollectionReference collection = FirebaseFirestore.instance.collection("${Constants.year}${Globals.currentEvent!.eventCode}");
+              //   collection.doc("${widget.team}").update({
+              //     widget.id: widget.currentValue
+              //   });
+              // }
             },
           ),
         ),
@@ -200,22 +185,15 @@ class _BooleanListTileState extends State<BooleanListTile> {
   }
 
   void _getData() async {
-    CollectionReference collection = FirebaseFirestore.instance.collection("${Constants.year}${Globals.currentEvent!.eventCode}");
-    DocumentSnapshot<Object?> data = await collection.doc("${widget.team}").get();
-    try {
-      if (data.get(widget.id) != null) {
-        widget.currentValue = data.get(widget.id);
-      }
-    }
-    catch(e) {
-      collection.doc("${widget.team}").update({
-        widget.id: widget.currentValue
-      });
-    }
-
-    setState(() {
-
-    });
+    // CollectionReference collection = FirebaseFirestore.instance.collection("${Constants.year}${Globals.currentEvent!.eventCode}");
+    // //DocumentSnapshot<Object?> data = await collection.doc("${widget.team}").get();
+    // collection.doc("${widget.team}").update({
+    //   widget.id: widget.currentValue
+    // });
+    //
+    // setState(() {
+    //
+    // });
   }
 
   @override
@@ -227,12 +205,12 @@ class _BooleanListTileState extends State<BooleanListTile> {
           setState(() {
             widget.currentValue = value == null ? widget.currentValue : value;
           });
-          if (Globals.currentEvent != null) {
-            CollectionReference collection = FirebaseFirestore.instance.collection("${Constants.year}${Globals.currentEvent!.eventCode}");
-            collection.doc("${widget.team}").update({
-              widget.id: widget.currentValue
-            });
-          }
+          // if (Globals.currentEvent != null) {
+          //   CollectionReference collection = FirebaseFirestore.instance.collection("${Constants.year}${Globals.currentEvent!.eventCode}");
+          //   collection.doc("${widget.team}").update({
+          //     widget.id: widget.currentValue
+          //   });
+          // }
         },
         value: widget.currentValue,
       )
@@ -261,24 +239,16 @@ class _ParagraphListTileState extends State<ParagraphListTile> {
   }
 
   void _getData() async {
-    CollectionReference collection = FirebaseFirestore.instance.collection("${Constants.year}${Globals.currentEvent!.eventCode}");
-    DocumentReference<Object?> docRef = collection.doc("${widget.team}");
-    DocumentSnapshot<Object?> doc = await docRef.get();
-
-    try {
-      if (doc.get(widget.id) != null) {
-        _paragraphController.text = doc.get(widget.id);
-      }
-    }
-    catch(e) {
-      collection.doc("${widget.team}").update({
-        widget.id: _paragraphController.value.text
-      });
-    }
-
-    setState(() {
-
-    });
+    // CollectionReference collection = FirebaseFirestore.instance.collection("${Constants.year}${Globals.currentEvent!.eventCode}");
+    // //DocumentReference<Object?> docRef = collection.doc("${widget.team}");
+    //
+    // collection.doc("${widget.team}").update({
+    //   widget.id: _paragraphController.value.text
+    // });
+    //
+    // setState(() {
+    //
+    // });
   }
 
   @override
@@ -286,12 +256,12 @@ class _ParagraphListTileState extends State<ParagraphListTile> {
     return TextFormField(
       controller: _paragraphController,
       onChanged: (s) {
-        if (Globals.currentEvent != null) {
-          CollectionReference collection = FirebaseFirestore.instance.collection("${Constants.year}${Globals.currentEvent!.eventCode}");
-          collection.doc("${widget.team}").update({
-            widget.id: s
-          });
-        }
+        // if (Globals.currentEvent != null) {
+        //   CollectionReference collection = FirebaseFirestore.instance.collection("${Constants.year}${Globals.currentEvent!.eventCode}");
+        //   collection.doc("${widget.team}").update({
+        //     widget.id: s
+        //   });
+        // }
       },
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(16, 0, 16, 0),

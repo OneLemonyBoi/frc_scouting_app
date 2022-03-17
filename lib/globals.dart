@@ -1,5 +1,5 @@
-import 'package:tba_api_client/api.dart';
+import 'package:frc_scouting_app/event.dart';
 
 class Globals {
-  static Event? currentEvent = Event();
+  static Event? currentEvent = Event(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
 }

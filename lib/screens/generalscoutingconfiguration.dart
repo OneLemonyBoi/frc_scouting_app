@@ -16,11 +16,14 @@ class _GeneralScoutingConfigurationState extends State<GeneralScoutingConfigurat
   String _teamName = "No Team Found";
 
   Future<void> _openScoutingScreen(BuildContext context) async {
-    String str = await getTeamName(int.parse(_teamNumberController.value.text == "" ? "-1" : _teamNumberController.value.text));
+    // TODO: Replace with API Call for team
+    String str = "No Team Found";
     if (str != "No Team Found") {
-      Navigator.pushReplacement(context, MaterialPageRoute(
-        builder: (context) => GeneralScouting(
-            teamID: int.parse(_teamNumberController.value.text))
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(
+            builder: (context) => GeneralScouting(
+                teamID: int.parse(_teamNumberController.value.text)
+            )
         )
       );
     }
@@ -41,7 +44,7 @@ class _GeneralScoutingConfigurationState extends State<GeneralScoutingConfigurat
               child: TextFormField(
                 controller: _teamNumberController,
                 onChanged: (s) async {
-                  String text = await getTeamName(int.parse(s == "" ? "-1" : s));
+                  String text = ""; // TODO: Replace with API Call for team name
                   setState(() {
                     _teamName = text;
                   });

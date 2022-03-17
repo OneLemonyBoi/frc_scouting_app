@@ -1,9 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:frc_scouting_app/constants.dart';
+import 'package:frc_scouting_app/event.dart';
 import 'package:frc_scouting_app/globals.dart';
 import 'package:frc_scouting_app/requests.dart';
-import 'package:tba_api_client/api.dart';
 
 class CompetitionSelection extends StatefulWidget {
   const CompetitionSelection({Key? key}) : super(key: key);
@@ -23,7 +22,8 @@ class _CompetitionSelectionState extends State<CompetitionSelection> {
   }
 
   Future<void> eventList() async {
-    events = await getEvents(Constants.year);
+    // TODO: Replace with API Call for event
+
     setState(() {
 
     });
@@ -49,7 +49,7 @@ class _CompetitionSelectionState extends State<CompetitionSelection> {
                   vertical: MediaQuery.of(context).size.height * 0.01),
               child: DropdownButton<Event>(
                 items: events?.map((e) => DropdownMenuItem<Event>(
-                    child: Text(e.shortName),
+                    child: Text(e.shortName == null ? "No Name" : e.shortName!),
                     value: e,
                 )).toList(),
                 onChanged: (Event? e) {

@@ -3,14 +3,9 @@ import 'package:frc_scouting_app/screens/competitionselection.dart';
 import 'package:frc_scouting_app/screens/generalscoutingconfiguration.dart';
 import 'package:frc_scouting_app/screens/homepage.dart';
 import 'package:frc_scouting_app/screens/loginpage.dart';
-import 'firebase_options.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  // TODO: Init Firebase
   runApp(const MyApp());
 }
 
