@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:frc_scouting_app/Team.dart';
+import 'package:frc_scouting_app/team.dart';
 import 'package:http/http.dart' as http;
 
 const apiURL = "https://www.thebluealliance.com/api/v3";
@@ -26,6 +26,15 @@ Future<Team> getTeam(int teamNumber) async {
       headers: headers);
   if (response.statusCode == 200) {
     return Team.fromJson(jsonDecode(response.body));
+  } else {
+    throw Exception("There was an error");
+  }
+}
+Future<List<Team>> getTeamsFromEvent(String eventName) async {
+  final response = await http.get(Uri.parse("$apiURL/event/$eventName/teams"),
+      headers: headers);
+  if (response.statusCode == 200) {
+    return Team.listFromJson(jsonDecode(response.body));
   } else {
     throw Exception("There was an error");
   }

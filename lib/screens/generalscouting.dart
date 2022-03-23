@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frc_scouting_app/Team.dart';
+import 'package:frc_scouting_app/team.dart';
 import 'package:frc_scouting_app/widgets.dart';
 
 class GeneralScouting extends StatefulWidget {

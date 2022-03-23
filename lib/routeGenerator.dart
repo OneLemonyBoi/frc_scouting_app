@@ -9,10 +9,10 @@ class RouteGenerator {
 
     switch (settings.name) {
       case "/home":
-        return MaterialPageRoute(builder: (context) => const ScouterHomePage());
+        return MaterialPageRoute(builder: (context) => ScouterHomePage());
       case "/scouting/general/config":
         return MaterialPageRoute(
-            builder: (context) => const GeneralScoutingConfiguration());
+            builder: (context) => GeneralScoutingConfiguration());
       case "/competition":
         return MaterialPageRoute(
             builder: (context) => const CompetitionSelection());

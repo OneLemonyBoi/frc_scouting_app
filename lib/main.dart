@@ -17,9 +17,8 @@ class MyApp extends StatelessWidget {
       onGenerateRoute: RouteGenerator.generateRoute,
       debugShowCheckedModeBanner: false,
       routes: {
-        "/home": (context) => const ScouterHomePage(),
-        "/scouting/general/config": (context) =>
-            const GeneralScoutingConfiguration(),
+        "/home": (context) => ScouterHomePage(),
+        "/scouting/general/config": (context) => GeneralScoutingConfiguration(),
         "/competition": (context) => const CompetitionSelection(),
 //        "/scouting/general": (context) => const GeneralScouting(),
       },
