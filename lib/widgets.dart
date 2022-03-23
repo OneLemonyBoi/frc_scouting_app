@@ -32,59 +32,49 @@ class CardEntry extends StatelessWidget {
   }
 }
 
-class DropdownListTile extends StatefulWidget {
-  int team;
-  String id;
-  String name;
-  List<String> choices;
-  late String currentChoice;
+// class DropdownListTile extends StatefulWidget {
+//   final Function(String) callback;
+//   int team;
+//   String id;
+//   String name;
+//   List<String> choices;
+//   late String currentChoice;
 
-  DropdownListTile(
-      {required this.team,
-      required this.id,
-      required this.name,
-      required this.choices,
-      Key? key})
-      : super(key: key) {
-    currentChoice = this.choices.first;
-  }
+//   DropdownListTile(
+//       {required this.callback,
+//       required this.name,
+//       required this.choices,
+//       Key? key})
+//       : super(key: key) {
+//     currentChoice = choices[0];
+//   }
 
-  @override
-  State<DropdownListTile> createState() => _DropdownListTileState();
-}
+//   @override
+//   State<DropdownListTile> createState() => _DropdownListTileState();
+// }
 
-class _DropdownListTileState extends State<DropdownListTile> {
-  @override
-  void initState() {
-    _getData();
-    super.initState();
-  }
+class DropdownListTileState extends StatelessWidget {
+  final Function(String) callback;
+  final String name;
+  final List<String> choices;
 
-  void _getData() async {}
+  const DropdownListTileState(this.callback, this.name, this.choices);
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(widget.name),
+      title: Text(name),
       trailing: DropdownButton<String>(
-        items: widget.choices
+        items: choices
             .map((e) => DropdownMenuItem<String>(
                   child: Text(e),
                   value: e,
                 ))
             .toList(),
         onChanged: (String? s) {
-          setState(() {
-            widget.currentChoice = (s == null ? "" : s);
-          });
-          // if (Globals.currentEvent != null) {
-          //   CollectionReference collection = FirebaseFirestore.instance.collection("${Constants.year}${Globals.currentEvent!.eventCode}");
-          //   collection.doc("${widget.team}").update({
-          //     widget.id: widget.currentChoice
-          //   });
-          // }
+          choices.first = s!;
         },
-        value: widget.currentChoice,
+        value: choices[0],
       ),
     );
   }
@@ -120,20 +110,7 @@ class NumberListTile extends StatefulWidget {
 class _NumberListTileState extends State<NumberListTile> {
   @override
   void initState() {
-    _getData();
     super.initState();
-  }
-
-  void _getData() async {
-    // CollectionReference collection = FirebaseFirestore.instance.collection("${Constants.year}${Globals.currentEvent!.eventCode}");
-    // DocumentSnapshot<Object?> data = await collection.doc("${widget.team}").get();
-    // collection.doc("${widget.team}").update({
-    //   widget.id: widget.currentValue
-    // });
-    //
-    // setState(() {
-    //
-    // });
   }
 
   @override
@@ -156,7 +133,7 @@ class _NumberListTileState extends State<NumberListTile> {
             value: widget.currentValue,
             onChanged: (double? d) {
               setState(() {
-                widget.currentValue = d == null ? widget.currentValue : d;
+                widget.currentValue = d ?? widget.currentValue;
               });
               // if (Globals.currentEvent != null) {
               //   CollectionReference collection = FirebaseFirestore.instance.collection("${Constants.year}${Globals.currentEvent!.eventCode}");
@@ -212,7 +189,7 @@ class _BooleanListTileState extends State<BooleanListTile> {
         trailing: Checkbox(
           onChanged: (bool? value) {
             setState(() {
-              widget.currentValue = value == null ? widget.currentValue : value;
+              widget.currentValue = value ?? widget.currentValue;
             });
             // if (Globals.currentEvent != null) {
             //   CollectionReference collection = FirebaseFirestore.instance.collection("${Constants.year}${Globals.currentEvent!.eventCode}");
@@ -274,7 +251,7 @@ class _ParagraphListTileState extends State<ParagraphListTile> {
         // }
       },
       decoration: InputDecoration(
-          contentPadding: EdgeInsets.fromLTRB(16, 0, 16, 0),
+          contentPadding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
           labelText: widget.label),
       keyboardType: TextInputType.multiline,
       minLines: 1,
