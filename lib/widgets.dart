@@ -277,7 +277,7 @@ class _ParagraphListTileState extends State<ParagraphListTile> {
           contentPadding: EdgeInsets.fromLTRB(16, 0, 16, 0),
           labelText: widget.label),
       keyboardType: TextInputType.multiline,
-      minLines: 1,
+      minLines: 5,
       maxLines: 100,
     );
   }
