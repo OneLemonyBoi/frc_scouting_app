@@ -38,12 +38,14 @@ class DropdownListTile extends StatefulWidget {
   String name;
   List<String> choices;
   late String currentChoice;
+  bool enabled;
 
   DropdownListTile(
       {required this.team,
       required this.id,
       required this.name,
       required this.choices,
+      this.enabled = true,
       Key? key})
       : super(key: key) {
     currentChoice = this.choices.first;
@@ -73,7 +75,7 @@ class _DropdownListTileState extends State<DropdownListTile> {
                   value: e,
                 ))
             .toList(),
-        onChanged: (String? s) {
+        onChanged: widget.enabled ? (String? s) {
           setState(() {
             widget.currentChoice = (s == null ? "" : s);
           });
@@ -83,7 +85,7 @@ class _DropdownListTileState extends State<DropdownListTile> {
           //     widget.id: widget.currentChoice
           //   });
           // }
-        },
+        } : null,
         value: widget.currentChoice,
       ),
     );
@@ -99,6 +101,7 @@ class NumberListTile extends StatefulWidget {
   double step;
   double acceleration;
   late double currentValue;
+  bool enabled;
 
   NumberListTile(
       {required this.team,
@@ -108,6 +111,7 @@ class NumberListTile extends StatefulWidget {
       this.max = 100,
       this.step = 1,
       this.acceleration = 0.25,
+      this.enabled = true,
       Key? key})
       : super(key: key) {
     currentValue = min;
@@ -149,7 +153,7 @@ class _NumberListTileState extends State<NumberListTile> {
         Flexible(
           child: SpinBox(
             min: widget.min,
-            max: widget.max,
+            max: widget.enabled ? widget.max : widget.min,
             step: widget.step,
             acceleration: widget.acceleration,
             keyboardType: TextInputType.number,
@@ -177,9 +181,10 @@ class BooleanListTile extends StatefulWidget {
   String id;
   String name;
   bool currentValue = false;
+  bool enabled;
 
   BooleanListTile(
-      {required this.team, required this.id, required this.name, Key? key})
+      {required this.team, required this.id, required this.name, this.enabled = true, Key? key})
       : super(key: key);
 
   @override
@@ -210,7 +215,7 @@ class _BooleanListTileState extends State<BooleanListTile> {
     return ListTile(
         title: Text(widget.name),
         trailing: Checkbox(
-          onChanged: (bool? value) {
+          onChanged: widget.enabled ? (bool? value) {
             setState(() {
               widget.currentValue = value == null ? widget.currentValue : value;
             });
@@ -220,7 +225,7 @@ class _BooleanListTileState extends State<BooleanListTile> {
             //     widget.id: widget.currentValue
             //   });
             // }
-          },
+          } : null,
           value: widget.currentValue,
         ));
   }
