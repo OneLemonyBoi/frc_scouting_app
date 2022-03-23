@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:frc_scouting_app/routeGenerator.dart';
 import 'package:frc_scouting_app/screens/competitionselection.dart';
 import 'package:frc_scouting_app/screens/generalscoutingconfiguration.dart';
 import 'package:frc_scouting_app/screens/homepage.dart';
 import 'package:frc_scouting_app/screens/loginpage.dart';
 
 void main() async {
-  // TODO: Init Firebase
   runApp(const MyApp());
 }
 
@@ -14,9 +14,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      onGenerateRoute: RouteGenerator.generateRoute,
+      debugShowCheckedModeBanner: false,
       routes: {
         "/home": (context) => const ScouterHomePage(),
-        "/scouting/general/config": (context) => const GeneralScoutingConfiguration(),
+        "/scouting/general/config": (context) =>
+            const GeneralScoutingConfiguration(),
         "/competition": (context) => const CompetitionSelection(),
 //        "/scouting/general": (context) => const GeneralScouting(),
       },
@@ -28,4 +31,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-

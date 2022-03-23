@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:frc_scouting_app/constants.dart';
-import 'package:frc_scouting_app/globals.dart';
+import 'package:frc_scouting_app/models/event.dart';
 import 'package:frc_scouting_app/widgets.dart';
 
 class ScouterHomePage extends StatefulWidget {
-  const ScouterHomePage({Key? key}) : super(key: key);
+  const ScouterHomePage({Key? key, Event? event}) : super(key: key);
 
   @override
   _ScouterHomePageState createState() => _ScouterHomePageState();
@@ -15,37 +14,33 @@ class _ScouterHomePageState extends State<ScouterHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(Constants.title),
+          iconTheme: const IconThemeData(color: Colors.black),
+          title: const Text("Scouting App"),
           actions: [
             Container(
               constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width * 0.4
-              ),
+                  maxWidth: MediaQuery.of(context).size.width * 0.4),
               child: ElevatedButton(
-                onPressed: () => Navigator.pushReplacementNamed(context, "/competition"),
-                child: Text(
-                  "Change Competition From ${Globals.currentEvent == null ? "None" : Globals.currentEvent!.shortName}",
-                  style: TextStyle(fontSize: 14, overflow: TextOverflow.visible),
-                  textAlign: TextAlign.center,
-                )
-              ),
+                  onPressed: () =>
+                      Navigator.pushReplacementNamed(context, "/competition"),
+                  child: const Text(
+                    "Test",
+                    style:
+                        TextStyle(fontSize: 14, overflow: TextOverflow.visible),
+                    textAlign: TextAlign.center,
+                  )),
             )
           ],
         ),
-        body: Container(
-            child: Center(
-              child: Column(
-                children: <Widget>[
-                  CardEntry("General Scouting", () {
-                    if (Globals.currentEvent != null) Navigator.pushNamed(context, "/scouting/general/config");
-                  }),
-                  CardEntry("Match Scouting", () {
-
-                  }),
-                ],
-              ),
-            )
-        )
-    );
+        body: Center(
+          child: Column(
+            children: <Widget>[
+              CardEntry("General Scouting", () {
+                Navigator.pushNamed(context, "/scouting/general/config");
+              }),
+              CardEntry("Match Scouting", () {})
+            ],
+          ),
+        ));
   }
 }

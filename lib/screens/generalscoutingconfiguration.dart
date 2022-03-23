@@ -1,31 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:frc_scouting_app/constants.dart';
-import 'package:frc_scouting_app/requests.dart';
+import 'package:frc_scouting_app/Team.dart';
+import 'package:frc_scouting_app/api.dart';
 import 'package:frc_scouting_app/screens/generalscouting.dart';
 
 class GeneralScoutingConfiguration extends StatefulWidget {
   const GeneralScoutingConfiguration({Key? key}) : super(key: key);
 
   @override
-  State<GeneralScoutingConfiguration> createState() => _GeneralScoutingConfigurationState();
+  State<GeneralScoutingConfiguration> createState() =>
+      _GeneralScoutingConfigurationState();
 }
 
-class _GeneralScoutingConfigurationState extends State<GeneralScoutingConfiguration> {
-  TextEditingController _teamNumberController = TextEditingController();
+class _GeneralScoutingConfigurationState
+    extends State<GeneralScoutingConfiguration> {
+  final TextEditingController _teamNumberController = TextEditingController();
   String _teamName = "No Team Found";
 
   Future<void> _openScoutingScreen(BuildContext context) async {
-    // TODO: Replace with API Call for team
-    String str = "No Team Found";
-    if (str != "No Team Found") {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(
-            builder: (context) => GeneralScouting(
-                teamID: int.parse(_teamNumberController.value.text)
-            )
-        )
-      );
+    if (_teamNumberController.value.text.isNotEmpty) {
+      Team team = await getTeam(int.parse(_teamNumberController.value.text));
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => GeneralScouting(team: team)));
+    } else {
+      showModalBottomSheet(
+          context: context,
+          builder: (_) => AlertDialog(
+                title: const Text('AlertDialog Title'),
+                content: SingleChildScrollView(
+                  child: ListBody(
+                    children: const <Widget>[
+                      Text("Please select a team to scout"),
+                    ],
+                  ),
+                ),
+              ));
     }
   }
 
@@ -33,45 +42,55 @@ class _GeneralScoutingConfigurationState extends State<GeneralScoutingConfigurat
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(Constants.title),
+        title: const Text("Scouting App"),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.1, vertical: MediaQuery.of(context).size.height * 0.01),
+              padding: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width * 0.1,
+                  vertical: MediaQuery.of(context).size.height * 0.01),
               child: TextFormField(
                 controller: _teamNumberController,
                 onChanged: (s) async {
-                  String text = ""; // TODO: Replace with API Call for team name
-                  setState(() {
-                    _teamName = text;
-                  });
+                  if (s == "") {
+                    setState(() {
+                      _teamName = "No Team Found";
+                    });
+                  } else {
+                    Team team = await getTeam(int.parse(s));
+                    setState(() {
+                      _teamName = team.nickname!;
+                    });
+                  }
                 },
-                decoration: InputDecoration(
-                  labelText: "Enter Team Number"
-                ),
+                decoration:
+                    const InputDecoration(labelText: "Enter Team Number"),
                 keyboardType: TextInputType.number,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly
-                ],
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               ),
             ),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.1, vertical: MediaQuery.of(context).size.height * 0.01),
+              padding: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width * 0.1,
+                  vertical: MediaQuery.of(context).size.height * 0.01),
               child: Text(
                 _teamName,
-                style: TextStyle(fontSize: 24),
+                style: const TextStyle(fontSize: 24),
               ),
             ),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.1, vertical: MediaQuery.of(context).size.height * 0.01),
+              padding: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width * 0.1,
+                  vertical: MediaQuery.of(context).size.height * 0.01),
               child: ElevatedButton(
-                style: TextButton.styleFrom(primary: Colors.black, backgroundColor: Colors.yellow.shade100),
-                onPressed: () => _openScoutingScreen(context),
-                child: Text("Start Scouting")
-              ),
+                  style: TextButton.styleFrom(
+                      primary: Colors.black,
+                      backgroundColor: Colors.yellow.shade100),
+                  onPressed: () => _openScoutingScreen(context),
+                  child: const Text("Start Scouting")),
             )
           ],
         ),

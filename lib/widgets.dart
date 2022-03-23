@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_spinbox/material.dart';
-import 'package:frc_scouting_app/constants.dart';
-import 'package:frc_scouting_app/globals.dart';
+import 'package:flutter_spinbox/flutter_spinbox.dart';
 
 class CardEntry extends StatelessWidget {
-  const CardEntry(this.text, this.onTap, {Key? key, this.flexAmount = 1, this.fontSize = 24}) : super(key: key);
+  const CardEntry(this.text, this.onTap,
+      {Key? key, this.flexAmount = 1, this.fontSize = 24})
+      : super(key: key);
   final String text;
   final int flexAmount;
   final double fontSize;
@@ -39,7 +39,13 @@ class DropdownListTile extends StatefulWidget {
   List<String> choices;
   late String currentChoice;
 
-  DropdownListTile({required this.team, required this.id, required this.name, required this.choices, Key? key}) : super(key: key) {
+  DropdownListTile(
+      {required this.team,
+      required this.id,
+      required this.name,
+      required this.choices,
+      Key? key})
+      : super(key: key) {
     currentChoice = this.choices.first;
   }
 
@@ -54,27 +60,19 @@ class _DropdownListTileState extends State<DropdownListTile> {
     super.initState();
   }
 
-  void _getData() async {
-    // CollectionReference collection = FirebaseFirestore.instance.collection("${Constants.year}${Globals.currentEvent!.eventCode}");
-    // // DocumentSnapshot<Object?> data = await collection.doc("${widget.team}").get();
-    // collection.doc("${widget.team}").update({
-    //   widget.id: widget.currentChoice
-    // });
-    //
-    // setState(() {
-    //
-    // });
-  }
+  void _getData() async {}
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(widget.name),
       trailing: DropdownButton<String>(
-        items: widget.choices.map((e) => DropdownMenuItem<String>(
-          child: Text(e),
-          value: e,
-        )).toList(),
+        items: widget.choices
+            .map((e) => DropdownMenuItem<String>(
+                  child: Text(e),
+                  value: e,
+                ))
+            .toList(),
         onChanged: (String? s) {
           setState(() {
             widget.currentChoice = (s == null ? "" : s);
@@ -102,7 +100,16 @@ class NumberListTile extends StatefulWidget {
   double acceleration;
   late double currentValue;
 
-  NumberListTile({required this.team, required this.id, required this.name, this.min = 0, this.max = 100, this.step = 1, this.acceleration = 0.25, Key? key}) : super(key: key) {
+  NumberListTile(
+      {required this.team,
+      required this.id,
+      required this.name,
+      this.min = 0,
+      this.max = 100,
+      this.step = 1,
+      this.acceleration = 0.25,
+      Key? key})
+      : super(key: key) {
     currentValue = min;
   }
 
@@ -134,7 +141,7 @@ class _NumberListTileState extends State<NumberListTile> {
     return Row(
       children: [
         Flexible(
-          flex: 3,
+          flex: 2,
           child: ListTile(
             title: Text(widget.name),
           ),
@@ -171,7 +178,9 @@ class BooleanListTile extends StatefulWidget {
   String name;
   bool currentValue = false;
 
-  BooleanListTile({required this.team, required this.id, required this.name, Key? key}) : super(key: key);
+  BooleanListTile(
+      {required this.team, required this.id, required this.name, Key? key})
+      : super(key: key);
 
   @override
   State<BooleanListTile> createState() => _BooleanListTileState();
@@ -199,22 +208,21 @@ class _BooleanListTileState extends State<BooleanListTile> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(widget.name),
-      trailing: Checkbox(
-        onChanged: (bool? value) {
-          setState(() {
-            widget.currentValue = value == null ? widget.currentValue : value;
-          });
-          // if (Globals.currentEvent != null) {
-          //   CollectionReference collection = FirebaseFirestore.instance.collection("${Constants.year}${Globals.currentEvent!.eventCode}");
-          //   collection.doc("${widget.team}").update({
-          //     widget.id: widget.currentValue
-          //   });
-          // }
-        },
-        value: widget.currentValue,
-      )
-    );
+        title: Text(widget.name),
+        trailing: Checkbox(
+          onChanged: (bool? value) {
+            setState(() {
+              widget.currentValue = value == null ? widget.currentValue : value;
+            });
+            // if (Globals.currentEvent != null) {
+            //   CollectionReference collection = FirebaseFirestore.instance.collection("${Constants.year}${Globals.currentEvent!.eventCode}");
+            //   collection.doc("${widget.team}").update({
+            //     widget.id: widget.currentValue
+            //   });
+            // }
+          },
+          value: widget.currentValue,
+        ));
   }
 }
 
@@ -223,7 +231,9 @@ class ParagraphListTile extends StatefulWidget {
   String id;
   String label;
 
-  ParagraphListTile({required this.id, required this.team, required this.label, Key? key}) : super(key: key);
+  ParagraphListTile(
+      {required this.id, required this.team, required this.label, Key? key})
+      : super(key: key);
 
   @override
   State<ParagraphListTile> createState() => _ParagraphListTileState();
@@ -265,8 +275,7 @@ class _ParagraphListTileState extends State<ParagraphListTile> {
       },
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(16, 0, 16, 0),
-          labelText: widget.label
-      ),
+          labelText: widget.label),
       keyboardType: TextInputType.multiline,
       minLines: 1,
       maxLines: 100,
