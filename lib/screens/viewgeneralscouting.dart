@@ -15,6 +15,24 @@ class _ViewGeneralScoutingState extends State<ViewGeneralScouting> {
   bool enabled = false;
   Map<String, dynamic> teamInfo = {};
   bool loading = true;
+
+  Map<String, List<String>> fancyDetails = {
+    "target": ["Hubs Shot At", "The hubs shot at by the robot/human"],
+    "shooting-percentage": ["Shooting Percentage", "The approximate shooting percentage of the robot/human"],
+    "shooting-range": ["Shooting Range", "The shooting range of the robot"],
+    "intake-system": ["Intake System", "If intake is done by robot or human player"],
+    "max-climb": ["Maximum Climb", "The maximum potential climb for the robot"],
+    "max-auto-balls": ["Maximum Ball Auto", "The maximum amount of balls shot in auto"],
+    "taxi": ["Taxi", "If the robot can taxi"],
+    "speed": ["Speed", "The speed of the robot"],
+    "drivebase": ["Drivebase", "The drivebase of the robt"],
+    "defensive": ["Defensive", "If the robot is defensive"],
+    "width": ["Robot Width", "Width of the robot's base"],
+    "height": ["Robot Height", "Height of the robot's base"],
+    "weight":  ["Robot Weight", "Weight of the robot"],
+    "language": ["Robot Programming Language", "The robot's programming language"],
+  };
+
   Future<void> getTeamData() async {
     DocumentSnapshot ds = await FirebaseFirestore.instance
         .collection('2022camb')
@@ -38,11 +56,11 @@ class _ViewGeneralScoutingState extends State<ViewGeneralScouting> {
 
   @override
   Widget build(BuildContext context) {
-    // String filler = "FRC Team ${widget.team.key?.substring(3)} -";
+    String filler = "FRC Team ${widget.team.key?.substring(3)}";
 
     return Scaffold(
         appBar: AppBar(
-          title: Text("${widget.team.nickname} - ${widget.team.teamNumber}"),
+          title: Text(filler),
         ),
         body: teamInfo.isNotEmpty
             ? !loading
@@ -56,8 +74,12 @@ class _ViewGeneralScoutingState extends State<ViewGeneralScouting> {
                             crossAxisSpacing: 20,
                             mainAxisSpacing: 20),
                     itemBuilder: (ctx, i) {
+                      String tooltip = fancyDetails.keys.contains(teamInfo.keys.toList()[i]) ? fancyDetails[teamInfo.keys.toList()[i]]![1] as String : teamInfo.keys.toList()[i];
+                      String title = fancyDetails.keys.contains(teamInfo.keys.toList()[i]) ? fancyDetails[teamInfo.keys.toList()[i]]![0] as String : teamInfo.keys.toList()[i];
+                      bool disabled = teamInfo.values.toList()[i] == null;
+
                       return Tooltip(
-                        message: teamInfo.keys.toList()[i],
+                        message: tooltip,
                         decoration: BoxDecoration(
                             color: Colors.black54,
                             borderRadius:
@@ -65,20 +87,21 @@ class _ViewGeneralScoutingState extends State<ViewGeneralScouting> {
                         preferBelow: false,
                         verticalOffset: 20,
                         child: Card(
+                          color: disabled ? Colors.black12 : Colors.white,
                           child: InkWell(
-                            onTap: () {
+                            onTap: !disabled ? () {
                               openInfoDialogueBox(
                                   context,
-                                  teamInfo.keys.toList()[i],
+                                  "$filler - $title",
                                   "${teamInfo.values.toList()[i]}");
-                            },
+                            } : null,
                             child: Center(
                               child: Text(
-                                teamInfo.keys.toList()[i],
+                                title,
                                 style: const TextStyle(
                                   fontSize: 24,
                                 ),
-                                textAlign: TextAlign.left,
+                                textAlign: TextAlign.center,
                               ),
                             ),
                           ),

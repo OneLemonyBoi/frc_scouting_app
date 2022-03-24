@@ -17,20 +17,20 @@ class GeneralScouting extends StatefulWidget {
 
 class _GeneralScoutingState extends State<GeneralScouting> {
   Map<String, dynamic> scoutingInfo = {
-    "target": String,
-    "shooting-percentage": int,
-    "shooting-range": String,
-    "intake-system": String,
-    "max-climb": String,
-    "max-auto-balls": int,
+    "target": null,
+    "shooting-percentage": null,
+    "shooting-range": null,
+    "intake-system": null,
+    "max-climb": null,
+    "max-auto-balls": null,
     "taxi": false,
-    "speed": String,
-    "drivebase": String,
+    "speed": null,
+    "drivebase": null,
     "defensive": false,
-    "width": int,
-    "height": int,
-    "weight": int,
-    "language": String,
+    "width": null,
+    "height": null,
+    "weight": null,
+    "language": null,
   };
   Team team;
   bool enabled = false;

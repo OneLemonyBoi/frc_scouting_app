@@ -77,8 +77,8 @@ void openInfoDialogueBox(
   showDialog<String>(
     context: context,
     builder: (BuildContext context) => AlertDialog(
-      title: Text(title),
-      content: Text(description),
+      title: Text(title, textAlign: TextAlign.center),
+      content: Text(description, textAlign: TextAlign.center),
       actions: <Widget>[
         TextButton(
           onPressed: () => Navigator.pop(context, 'Close'),
