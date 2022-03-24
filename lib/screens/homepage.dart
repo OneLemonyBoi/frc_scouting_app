@@ -27,7 +27,7 @@ class _ScouterHomePageState extends State<ScouterHomePage> {
                 Navigator.pushNamed(context, "/scouting/general/config",
                     arguments: widget.event);
               }),
-              CardEntry("Match Scouting", () {
+              CardEntry("Scouting Status", () {
                 Navigator.pushNamed(context, "/scouting/general/view",
                     arguments: widget.event);
               })
