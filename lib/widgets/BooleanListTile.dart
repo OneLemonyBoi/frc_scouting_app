@@ -3,15 +3,17 @@ import 'package:flutter/material.dart';
 class BooleanListTile extends StatefulWidget {
   String name;
   Function(bool) callback;
-  bool currentValue = false;
+  bool? currentValue;
   bool enabled;
 
   BooleanListTile(
       {required this.name,
       required this.callback,
-      this.enabled = true,
+      this.enabled = true, this.currentValue,
       Key? key})
-      : super(key: key);
+      : super(key: key) {
+    currentValue ?? false;
+  }
 
   @override
   State<BooleanListTile> createState() => _BooleanListTileState();

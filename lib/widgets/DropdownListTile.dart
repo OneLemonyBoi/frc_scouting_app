@@ -4,16 +4,16 @@ class StringDropDown extends StatefulWidget {
   final Function(String) callback;
   final String name;
   final List<String> choices;
-  late String currentChoice;
+  String? currentChoice;
   final bool enabled;
   StringDropDown(
       {Key? key,
       required this.name,
       required this.callback,
       required this.choices,
-      this.enabled = true})
+      this.enabled = true, this.currentChoice})
       : super(key: key) {
-    currentChoice = choices.first;
+    currentChoice = currentChoice ?? choices.first;
   }
 
   @override

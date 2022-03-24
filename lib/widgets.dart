@@ -88,3 +88,24 @@ void openInfoDialogueBox(
     ),
   );
 }
+
+void openDecisionBox(
+    BuildContext context, String title, dynamic description, String optionA, VoidCallback aAction, String optionB, VoidCallback bAction) {
+  showDialog<String>(
+    context: context,
+    builder: (BuildContext context) => AlertDialog(
+      title: Text(title, textAlign: TextAlign.center),
+      content: Text(description, textAlign: TextAlign.center),
+      actions: <Widget>[
+        TextButton(
+          onPressed: aAction,
+          child: Text(optionA),
+        ),
+        TextButton(
+          onPressed: bAction,
+          child: Text(optionB),
+        )
+      ],
+    ),
+  );
+}

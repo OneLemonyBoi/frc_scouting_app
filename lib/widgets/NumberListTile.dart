@@ -5,17 +5,17 @@ class NumberListTile extends StatefulWidget {
   String name;
   Function(double) callback;
   double step;
-  late double currentValue;
+  double? currentValue;
   bool enabled;
 
   NumberListTile(
       {required this.name,
       required this.callback,
       this.step = 1,
-      this.enabled = true,
+      this.enabled = true, this.currentValue,
       Key? key})
       : super(key: key) {
-    currentValue = 0;
+    currentValue = currentValue ?? 0;
   }
 
   @override
@@ -44,7 +44,7 @@ class _NumberListTileState extends State<NumberListTile> {
             min: 0,
             max: 200,
             keyboardType: TextInputType.number,
-            value: widget.currentValue,
+            value: widget.currentValue!,
             onChanged: widget.enabled
                 ? (double? d) {
                     setState(() {
