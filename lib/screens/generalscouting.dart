@@ -1,158 +1,232 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:frc_scouting_app/widgets.dart';
 
-import '../constants.dart';
-import '../globals.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:frc_scouting_app/team.dart';
+import 'package:frc_scouting_app/widgets/BooleanListTile.dart';
+import 'package:frc_scouting_app/widgets/DropdownListTile.dart';
+import 'package:frc_scouting_app/widgets/NumberListTile.dart';
 
 class GeneralScouting extends StatefulWidget {
-  int teamID;
-  GeneralScouting({Key? key, required this.teamID}) : super(key: key);
+  Team team;
+  GeneralScouting({Key? key, required this.team}) : super(key: key);
 
   @override
-  State<GeneralScouting> createState() => _GeneralScoutingState();
+  State<GeneralScouting> createState() => _GeneralScoutingState(team);
 }
 
 class _GeneralScoutingState extends State<GeneralScouting> {
+  Map<String, dynamic> scoutingInfo = {
+    "target": String,
+    "shooting-percentage": int,
+    "shooting-range": String,
+    "intake-system": String,
+    "max-climb": String,
+    "max-auto-balls": int,
+    "taxi": false,
+    "speed": String,
+    "drivebase": String,
+    "defensive": false,
+    "width": int,
+    "height": int,
+    "weight": int,
+    "language": String,
+  };
+  Team team;
+  bool enabled = false;
+  _GeneralScoutingState(this.team);
+
+  Future<void> addToDatabase(bool enabled) async {
+    print(scoutingInfo.toString());
+    if (!enabled) {
+      FirebaseFirestore.instance
+          .collection("2022camb")
+          .doc("${widget.team.teamNumber}")
+          .set(scoutingInfo);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("General Scouting - FRC Team ${widget.teamID}"),
+        title: Text("${team.nickname}"),
+        actions: [
+          Container(
+            constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width * 0.175),
+            child: ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    enabled = !enabled;
+                  });
+                  addToDatabase(enabled);
+                },
+                child: SvgPicture.asset(
+                    "assets/${enabled ? "un" : ""}locked.svg")),
+          )
+        ],
       ),
       body: SingleChildScrollView(
-        child: Container(
-          child: Column(
-            children: [
-              Container(
-                child: DropdownListTile(
-                    team: widget.teamID,
-                    id: "hubs_shot_at",
-                    name: "Hubs Shot At",
-                    choices: ["None", "Lower", "Upper", "Both"]
-                ),
-                color: Colors.black54,
+        child: Column(
+          children: [
+            Container(
+              child: StringDropDown(
+                  enabled: enabled,
+                  callback: (String value) {
+                    scoutingInfo['target'] = value;
+                  },
+                  name: "Hubs Shot At",
+                  choices: const ["Lower", "Upper", "Neither", "Both"]),
+              color: Colors.black54,
+            ),
+            Container(
+              child: NumberListTile(
+                  callback: (double value) {
+                    scoutingInfo['shooting-percentage'] = value;
+                  },
+                  enabled: enabled,
+                  name: "Shooting Percentage"),
+              color: Colors.red.shade300,
+            ),
+            Container(
+              child: StringDropDown(
+                  enabled: enabled,
+                  callback: (String value) {
+                    scoutingInfo['shooting-range'] = value;
+                    return value;
+                  },
+                  name: "Shooting Range",
+                  choices: const [
+                    "None",
+                    "Fender",
+                    "Line",
+                    "Within Line Area",
+                    "Anywhere"
+                  ]),
+              color: Colors.black54,
+            ),
+            Container(
+              child: StringDropDown(
+                  enabled: enabled,
+                  callback: (String value) {
+                    scoutingInfo['intake-system'] = value;
+                    return value;
+                  },
+                  name: "Intake System",
+                  choices: const ["None", "Human Player", "Robot", "Both"]),
+              color: Colors.red.shade300,
+            ),
+            Container(
+              child: StringDropDown(
+                  enabled: enabled,
+                  callback: (String value) {
+                    scoutingInfo['max-climb'] = value;
+                    return value;
+                  },
+                  name: "Maximum Climb",
+                  choices: const ["None", "Low", "Mid", "High", "Traversal"]),
+              color: Colors.black54,
+            ),
+            Container(
+              child: NumberListTile(
+                callback: (double value) {
+                  scoutingInfo['max-auto-balls'] = value;
+                },
+                enabled: enabled,
+                name: "Maximum Balls in Autonomous",
               ),
-              Container(
-                child: NumberListTile(
-                    team: widget.teamID,
-                    id: "shooting_percentage",
-                    name: "Shooting Percentage"
-                ),
-                color: Colors.red.shade300,
+              color: Colors.red.shade300,
+            ),
+            Container(
+              child: BooleanListTile(
+                  enabled: enabled,
+                  callback: (bool value) {
+                    scoutingInfo['taxi'] = value;
+                  },
+                  name: "Robot Taxi"),
+              color: Colors.black54,
+            ),
+            Container(
+              child: StringDropDown(
+                  enabled: enabled,
+                  callback: (String value) {
+                    scoutingInfo['speed'] = value;
+                    return value;
+                  },
+                  name: "Robot Speed",
+                  choices: const ["Slow", "Medium", "Fast", "Blazing Fast"]),
+              color: Colors.red.shade300,
+            ),
+            Container(
+              child: StringDropDown(
+                  enabled: enabled,
+                  callback: (String value) {
+                    scoutingInfo['drivebase'] = value;
+
+                    return value;
+                  },
+                  name: "Robot Drivebase",
+                  choices: const [
+                    "Tank",
+                    "Mechanum",
+                    "Swerve",
+                    "H-Drive",
+                    "Insect Drive",
+                    "Kiwi Drive",
+                    "X-Drive"
+                  ]),
+              color: Colors.black54,
+            ),
+            Container(
+              child: BooleanListTile(
+                  callback: (bool value) {
+                    scoutingInfo['defensive'] = value;
+                  },
+                  enabled: enabled,
+                  name: "Robot is Defensive"),
+              color: Colors.red.shade300,
+            ),
+            Container(
+              child: NumberListTile(
+                  callback: (double value) {
+                    scoutingInfo['width'] = value;
+                  },
+                  enabled: enabled,
+                  name: "Robot Width"),
+              color: Colors.black54,
+            ),
+            Container(
+              child: NumberListTile(
+                callback: (double value) {
+                  scoutingInfo['height'] = value;
+                },
+                enabled: enabled,
+                name: "Robot Height",
               ),
-              Container(
-                child: DropdownListTile(
-                    team: widget.teamID,
-                    id: "shooting_range",
-                    name: "Shooting Range",
-                    choices: ["None", "Fender", "Line", "Within Line Area", "Anywhere"]
-                ),
-                color: Colors.black54,
+              color: Colors.red.shade300,
+            ),
+            Container(
+              child: NumberListTile(
+                callback: (double value) {
+                  scoutingInfo['weight'] = value;
+                },
+                enabled: enabled,
+                name: "Robot Weight",
               ),
-              Container(
-                child: DropdownListTile(
-                    team: widget.teamID,
-                    id: "intake_system",
-                    name: "Intake System",
-                    choices: ["None", "Human Player", "Robot", "Both"]
-                ),
-                color: Colors.red.shade300,
-              ),
-              Container(
-                child: DropdownListTile(
-                    team: widget.teamID,
-                    id: "max_climb",
-                    name: "Maximum Climb",
-                    choices: ["None", "Low", "Mid", "High", "Traversal"]
-                ),
-                color: Colors.black54,
-              ),
-              Container(
-                child: NumberListTile(
-                    team: widget.teamID,
-                    id: "max_auto_balls",
-                    name: "Maximum Balls in Autonomous", min: 0, max: 10, acceleration: 0.1
-                ),
-                color: Colors.red.shade300,
-              ),
-              Container(
-                child: BooleanListTile(
-                    team: widget.teamID,
-                    id: "auto_tarmac",
-                    name: "Robot leaves Tarmac during Autonomous"
-                ),
-                color: Colors.black54,
-              ),
-              Container(
-                child: DropdownListTile(
-                    team: widget.teamID,
-                    id: "speed",
-                    name: "Robot Speed",
-                    choices: ["Slow", "Medium", "Fast", "Blazing Fast"]
-                ),
-                color: Colors.red.shade300,
-              ),
-              Container(
-                child: DropdownListTile(
-                    team: widget.teamID,
-                    id: "drivebase",
-                    name: "Robot Drivebase",
-                    choices: ["Tank", "Mechanum", "Swerve", "H-Drive", "Insect Drive", "Kiwi Drive", "X-Drive"]
-                ),
-                color: Colors.black54,
-              ),
-              Container(
-                child: BooleanListTile(
-                    team: widget.teamID,
-                    id: "is_defensive",
-                    name: "Robot is Defensive"
-                ),
-                color: Colors.red.shade300,
-              ),
-              Container(
-                child: NumberListTile(
-                    team: widget.teamID,
-                    id: "robot_width",
-                    name: "Robot Width", min: 1, max: 40
-                ),
-                color: Colors.black54,
-              ),
-              Container(
-                child: NumberListTile(
-                    team: widget.teamID,
-                    id: "robot_height",
-                    name: "Robot Height", min: 1, max: 40
-                ),
-                color: Colors.red.shade300,
-              ),
-              Container(
-                child: NumberListTile(
-                    team: widget.teamID,
-                    id: "robot_weight",
-                    name: "Robot Weight", min: 1, max: 125, acceleration: 0.3
-                ),
-                color: Colors.black54,
-              ),
-              Container(
-                child: DropdownListTile(
-                    team: widget.teamID,
-                    id: "language",
-                    name: "Programming Language",
-                    choices: ["Java", "C/C++", "Labview", "Python"]
-                ),
-                color: Colors.red.shade300,
-              ),
-              Container(
-                child: ParagraphListTile(
-                  team: widget.teamID,
-                  id: "comments",
-                  label: "Enter Additional Comments",
-                ),
-                color: Colors.black54,
-              )
-            ],
-          ),
+              color: Colors.black54,
+            ),
+            Container(
+              child: StringDropDown(
+                  enabled: enabled,
+                  callback: (String value) {
+                    scoutingInfo['language'] = value;
+                  },
+                  name: "Programming Language",
+                  choices: const ["Java", "C/C++", "Labview", "Python"]),
+              color: Colors.red.shade300,
+            ),
+          ],
         ),
       ),
     );

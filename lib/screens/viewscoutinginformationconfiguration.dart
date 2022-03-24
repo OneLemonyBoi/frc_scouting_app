@@ -1,21 +1,27 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:frc_scouting_app/backend/api.dart';
+import 'package:frc_scouting_app/constants.dart';
 import 'package:frc_scouting_app/models/event.dart';
 import 'package:frc_scouting_app/screens/generalscouting.dart';
+import 'package:frc_scouting_app/screens/viewgeneralscouting.dart';
 import 'package:frc_scouting_app/team.dart';
 
-class GeneralScoutingConfiguration extends StatefulWidget {
+class ViewScoutingInfoConfiguration extends StatefulWidget {
   Event? event;
-  GeneralScoutingConfiguration({Key? key}) : super(key: key);
+  ViewScoutingInfoConfiguration({Key? key}) : super(key: key);
 
   @override
-  State<GeneralScoutingConfiguration> createState() =>
-      _GeneralScoutingConfigurationState();
+  State<ViewScoutingInfoConfiguration> createState() =>
+      _ViewScoutingInfoConfigurationState();
 }
 
-class _GeneralScoutingConfigurationState extends State<GeneralScoutingConfiguration> {
+class _ViewScoutingInfoConfigurationState
+    extends State<ViewScoutingInfoConfiguration> {
   final TextEditingController _teamNameController = TextEditingController();
   List<Team> _teamList = [];
   List<Widget> _foundTeams = [];
@@ -28,7 +34,10 @@ class _GeneralScoutingConfigurationState extends State<GeneralScoutingConfigurat
   }
 
   Future<void> _openScoutingScreen(BuildContext context, Team team) async {
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => GeneralScouting(team: team)));
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ViewGeneralScouting(team: team)));
   }
 
   void _generateTeams() async {
@@ -37,14 +46,27 @@ class _GeneralScoutingConfigurationState extends State<GeneralScoutingConfigurat
     _teamList = await getTeamsFromEvent(widget.event?.key ?? "");
 
     for (Team team in _teamList) {
+      Widget avatarImage;
+      try {
+        if ((team.avatar ?? "") == "") {
+          avatarImage = Image.memory(base64Decode(baseAvatar));
+        } else {
+          base64Decode(team.avatar!);
+          avatarImage = Image.memory(base64Decode(team.avatar!));
+        }
+      } catch (e) {
+        avatarImage = Image.memory(base64Decode(baseAvatar));
+      }
+
       out.add(Container(
         child: InkWell(
           child: ListTile(
-            title: Text(team.nickname ?? "No Name"),
+            title: Text(
+                "${team.nickname ?? "No Name"} - ${team.city}, ${team.stateProv}"),
+            leading: avatarImage,
             onTap: () {
               _openScoutingScreen(context, team);
             },
-
           ),
         ),
       ));
@@ -59,7 +81,9 @@ class _GeneralScoutingConfigurationState extends State<GeneralScoutingConfigurat
     List<Widget> out = [];
 
     for (Team team in _teamList) {
-      if (team.nickname!.toLowerCase().contains(_teamNameController.value.text.toLowerCase())) {
+      if (team.nickname!
+          .toLowerCase()
+          .contains(_teamNameController.value.text.toLowerCase())) {
         out.add(Container(
           child: InkWell(
             child: ListTile(
@@ -84,7 +108,7 @@ class _GeneralScoutingConfigurationState extends State<GeneralScoutingConfigurat
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Scouting App"),
+        title: const Text("Scouting View"),
       ),
       body: Container(
         child: Center(
@@ -101,9 +125,7 @@ class _GeneralScoutingConfigurationState extends State<GeneralScoutingConfigurat
                     controller: _teamNameController,
                     onChanged: (s) async {
                       _updateTeams();
-                      setState(() {
-
-                      });
+                      setState(() {});
                     },
                     decoration:
                         const InputDecoration(labelText: "Enter Team Name"),

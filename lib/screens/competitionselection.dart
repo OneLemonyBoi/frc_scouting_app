@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frc_scouting_app/constants.dart';
-import 'package:frc_scouting_app/event.dart';
-import 'package:frc_scouting_app/globals.dart';
-import 'package:frc_scouting_app/requests.dart';
+import 'package:frc_scouting_app/models/event.dart';
 
 class CompetitionSelection extends StatefulWidget {
   const CompetitionSelection({Key? key}) : super(key: key);
@@ -12,20 +9,19 @@ class CompetitionSelection extends StatefulWidget {
 }
 
 class _CompetitionSelectionState extends State<CompetitionSelection> {
-  List<Event>? events;
+  late List<Event> events = [];
   Event? _dropdownSelected;
 
   @override
   void initState() {
-    eventList();
+    getEvents();
     super.initState();
   }
 
-  Future<void> eventList() async {
-    // TODO: Replace with API Call for event
-
+  Future<void> getEvents() async {
     setState(() {
-
+      events.add(
+          Event("2022camb", "Monterey Bay Regional", "Seaside", "CA", "USA"));
     });
   }
 
@@ -33,7 +29,7 @@ class _CompetitionSelectionState extends State<CompetitionSelection> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(Constants.title),
+        title: const Text("Scouting App"),
       ),
       body: Center(
         child: Column(
@@ -48,23 +44,26 @@ class _CompetitionSelectionState extends State<CompetitionSelection> {
                   horizontal: MediaQuery.of(context).size.width * 0.01,
                   vertical: MediaQuery.of(context).size.height * 0.01),
               child: DropdownButton<Event>(
-                items: events?.map((e) => DropdownMenuItem<Event>(
-                    child: Text(e.shortName == null ? "No Name" : e.shortName!),
-                    value: e,
-                )).toList(),
+                items: events
+                    .map((e) => DropdownMenuItem<Event>(
+                          child: Text(e.name),
+                          value: e,
+                        ))
+                    .toList(),
                 onChanged: (Event? e) {
                   setState(() {
-                    _dropdownSelected = e;
+                    _dropdownSelected = e!;
                   });
                 },
                 value: _dropdownSelected,
+                hint: const Text("Please select an event!"),
               ),
             ),
             ElevatedButton(
-              child: Text("Submit"),
-              onPressed: () {
-                Globals.currentEvent = _dropdownSelected;
-                Navigator.pushReplacementNamed(context, "/home");
+              child: const Text("Submit"),
+              onPressed: () async {
+                Navigator.pushReplacementNamed(context, "/home",
+                    arguments: _dropdownSelected);
               },
             )
           ],

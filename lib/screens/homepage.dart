@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:frc_scouting_app/constants.dart';
-import 'package:frc_scouting_app/globals.dart';
+import 'package:frc_scouting_app/models/event.dart';
 import 'package:frc_scouting_app/widgets.dart';
 
 class ScouterHomePage extends StatefulWidget {
-  const ScouterHomePage({Key? key}) : super(key: key);
+  Event? event;
+  ScouterHomePage({Key? key}) : super(key: key);
 
   @override
   _ScouterHomePageState createState() => _ScouterHomePageState();
@@ -13,39 +13,26 @@ class ScouterHomePage extends StatefulWidget {
 class _ScouterHomePageState extends State<ScouterHomePage> {
   @override
   Widget build(BuildContext context) {
+    widget.event = ModalRoute.of(context)!.settings.arguments as Event;
+
     return Scaffold(
         appBar: AppBar(
-          title: Text(Constants.title),
-          actions: [
-            Container(
-              constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width * 0.4
-              ),
-              child: ElevatedButton(
-                onPressed: () => Navigator.pushReplacementNamed(context, "/competition"),
-                child: Text(
-                  "Change Competition From ${Globals.currentEvent == null ? "None" : Globals.currentEvent!.shortName}",
-                  style: TextStyle(fontSize: 14, overflow: TextOverflow.visible),
-                  textAlign: TextAlign.center,
-                )
-              ),
-            )
-          ],
+          iconTheme: const IconThemeData(color: Colors.black),
+          title: const Text("Scouting App"),
         ),
-        body: Container(
-            child: Center(
-              child: Column(
-                children: <Widget>[
-                  CardEntry("General Scouting", () {
-                    if (Globals.currentEvent != null) Navigator.pushNamed(context, "/scouting/general/config");
-                  }),
-                  CardEntry("Match Scouting", () {
-
-                  }),
-                ],
-              ),
-            )
-        )
-    );
+        body: Center(
+          child: Column(
+            children: <Widget>[
+              CardEntry("General Scouting", () {
+                Navigator.pushNamed(context, "/scouting/general/config",
+                    arguments: widget.event);
+              }),
+              CardEntry("Scouting Status", () {
+                Navigator.pushNamed(context, "/scouting/general/view",
+                    arguments: widget.event);
+              })
+            ],
+          ),
+        ));
   }
 }
