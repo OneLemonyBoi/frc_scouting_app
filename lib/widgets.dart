@@ -32,36 +32,59 @@ class CardEntry extends StatelessWidget {
   }
 }
 
-class ParagraphListTile extends StatefulWidget {
-  String label;
+// class GriddedCardEntry extends StatelessWidget {
+//   const GriddedCardEntry(
+//       {required this.text,
+//       required this.onTap,
+//       Key? key,
+//       this.fontSize = 24,
+//       this.message = ""})
+//       : super(key: key);
+//   final String text;
+//   final double fontSize;
+//   final Function(dynamic) callback;
+//   final String message;
 
-  ParagraphListTile({required this.label, Key? key}) : super(key: key);
+//   @override
+//   Widget build(BuildContext context) {
+//     return Tooltip(
+//       decoration: BoxDecoration(
+//           color: Colors.black54,
+//           borderRadius: BorderRadius.circular(10000000000000)),
+//       preferBelow: false,
+//       verticalOffset: 20,
+//       message: message,
+//       child: Card(
+//         child: InkWell(
+//           onTap: callback,
+//           child: Center(
+//             child: Text(
+//               text,
+//               style: const TextStyle(
+//                 fontSize: 24,
+//               ),
+//               textAlign: TextAlign.left,
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
 
-  @override
-  State<ParagraphListTile> createState() => _ParagraphListTileState();
-}
-
-class _ParagraphListTileState extends State<ParagraphListTile> {
-  final TextEditingController _paragraphController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      controller: _paragraphController,
-      onChanged: (s) {
-        setState(() {});
-      },
-      decoration: InputDecoration(
-          contentPadding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-          labelText: widget.label),
-      keyboardType: TextInputType.multiline,
-      minLines: 5,
-      maxLines: 100,
-    );
-  }
+void openInfoDialogueBox(
+    BuildContext context, String title, dynamic description) {
+  showDialog<String>(
+    context: context,
+    builder: (BuildContext context) => AlertDialog(
+      title: Text(title),
+      content: Text(description),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.pop(context, 'Close'),
+          child: const Text('Close'),
+        )
+      ],
+    ),
+  );
 }

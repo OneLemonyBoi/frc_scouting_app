@@ -19,29 +19,18 @@ class _ScouterHomePageState extends State<ScouterHomePage> {
         appBar: AppBar(
           iconTheme: const IconThemeData(color: Colors.black),
           title: const Text("Scouting App"),
-          actions: [
-            Container(
-              constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width * 0.4),
-              child: ElevatedButton(
-                  onPressed: () =>
-                      Navigator.pushReplacementNamed(context, "/competition"),
-                  child: const Text(
-                    "Test",
-                    style:
-                        TextStyle(fontSize: 14, overflow: TextOverflow.visible),
-                    textAlign: TextAlign.center,
-                  )),
-            )
-          ],
         ),
         body: Center(
           child: Column(
             children: <Widget>[
               CardEntry("General Scouting", () {
-                Navigator.pushNamed(context, "/scouting/general/config", arguments: widget.event);
+                Navigator.pushNamed(context, "/scouting/general/config",
+                    arguments: widget.event);
               }),
-              CardEntry("Match Scouting", () {})
+              CardEntry("Scouting Status", () {
+                Navigator.pushNamed(context, "/scouting/general/view",
+                    arguments: widget.event);
+              })
             ],
           ),
         ));
