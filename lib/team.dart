@@ -19,8 +19,9 @@ class Team {
   String? website;
   /* First year the team officially competed. */
   int? rookieYear;
+  String? avatar;
 
-  Team(this.key, this.teamNumber, this.nickname, this.name, this.schoolName, this.city, this.stateProv, this.locationName, this.website, this.rookieYear);
+  Team(this.key, this.teamNumber, this.nickname, this.name, this.schoolName, this.city, this.stateProv, this.locationName, this.website, this.rookieYear, this.avatar);
 
   @override
   String toString() {
@@ -38,6 +39,7 @@ class Team {
     locationName = json['location_name'];
     website = json['website'];
     rookieYear = json['rookie_year'];
+    if (json.containsKey('avatar')) avatar = json['avatar'];
   }
 
   Map<String, dynamic> toJson() {
@@ -62,6 +64,8 @@ class Team {
       json['website'] = website;
     if (rookieYear != null)
       json['rookie_year'] = rookieYear;
+    if (avatar != null)
+      json['avatar'] = avatar;
     return json;
   }
 

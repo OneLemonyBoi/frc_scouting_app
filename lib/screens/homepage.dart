@@ -39,9 +39,12 @@ class _ScouterHomePageState extends State<ScouterHomePage> {
           child: Column(
             children: <Widget>[
               CardEntry("General Scouting", () {
-                Navigator.pushNamed(context, "/scouting/general/config", arguments: widget.event);
+                Navigator.pushNamed(context, "/scouting/general/config",
+                    arguments: widget.event);
               }),
-              CardEntry("Match Scouting", () {})
+              CardEntry("Match Scouting", () {
+                Navigator.pushNamed(context, "/scouting/general/view", arguments: widget.event);
+              })
             ],
           ),
         ));

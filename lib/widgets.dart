@@ -32,6 +32,43 @@ class CardEntry extends StatelessWidget {
   }
 }
 
+class GriddedCardEntry extends StatelessWidget {
+  const GriddedCardEntry({required this.text, required this.onTap, Key? key, this.flexAmount = 1, this.fontSize = 24, this.message = ""})
+      : super(key: key);
+  final String text;
+  final int flexAmount;
+  final double fontSize;
+  final GestureTapCallback onTap;
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      decoration: BoxDecoration(
+        color: Colors.black54,
+        borderRadius: BorderRadius.circular(10000000000000)
+      ),
+      preferBelow: false,
+      verticalOffset: 20,
+      message: message,
+      child: Card(
+        child: InkWell(
+          onTap: onTap,
+          child: Center(
+            child: Text(
+              text,
+              style: TextStyle(
+                fontSize: fontSize,
+              ),
+              textAlign: TextAlign.left,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class DropdownListTile extends StatefulWidget {
   int team;
   String id;
@@ -286,4 +323,20 @@ class _ParagraphListTileState extends State<ParagraphListTile> {
       maxLines: 100,
     );
   }
+}
+
+void openInfoDialogueBox(BuildContext context, String title, String description) {
+  showDialog<String>(
+    context: context,
+    builder: (BuildContext context) => AlertDialog(
+      title: Text(title),
+      content: Text(description),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.pop(context, 'Close'),
+          child: const Text('Close'),
+        )
+      ],
+    ),
+  );
 }

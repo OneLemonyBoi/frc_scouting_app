@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frc_scouting_app/screens/competitionselection.dart';
 import 'package:frc_scouting_app/screens/generalscoutingconfiguration.dart';
 import 'package:frc_scouting_app/screens/homepage.dart';
+import 'package:frc_scouting_app/screens/viewscoutinginformationconfiguration.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -16,6 +17,8 @@ class RouteGenerator {
       case "/competition":
         return MaterialPageRoute(
             builder: (context) => const CompetitionSelection());
+      case "/scouting/general/view":
+        return MaterialPageRoute(builder: (context) => ViewScoutingInfoConfiguration());
       default:
         return errorRoute();
     }

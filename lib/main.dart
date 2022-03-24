@@ -4,6 +4,7 @@ import 'package:frc_scouting_app/screens/competitionselection.dart';
 import 'package:frc_scouting_app/screens/generalscoutingconfiguration.dart';
 import 'package:frc_scouting_app/screens/homepage.dart';
 import 'package:frc_scouting_app/screens/loginpage.dart';
+import 'package:frc_scouting_app/screens/viewscoutinginformationconfiguration.dart';
 
 void main() async {
   runApp(const MyApp());
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
         "/home": (context) => ScouterHomePage(),
         "/scouting/general/config": (context) => GeneralScoutingConfiguration(),
         "/competition": (context) => const CompetitionSelection(),
+        "/scouting/general/view": (context) => ViewScoutingInfoConfiguration(),
 //        "/scouting/general": (context) => const GeneralScouting(),
       },
       title: 'Flutter Demo',
