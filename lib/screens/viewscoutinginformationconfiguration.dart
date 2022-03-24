@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-import 'package:frc_scouting_app/api.dart';
+import 'package:frc_scouting_app/backend/api.dart';
 import 'package:frc_scouting_app/constants.dart';
 import 'package:frc_scouting_app/models/event.dart';
 import 'package:frc_scouting_app/screens/generalscouting.dart';
@@ -20,7 +20,8 @@ class ViewScoutingInfoConfiguration extends StatefulWidget {
       _ViewScoutingInfoConfigurationState();
 }
 
-class _ViewScoutingInfoConfigurationState extends State<ViewScoutingInfoConfiguration> {
+class _ViewScoutingInfoConfigurationState
+    extends State<ViewScoutingInfoConfiguration> {
   final TextEditingController _teamNameController = TextEditingController();
   List<Team> _teamList = [];
   List<Widget> _foundTeams = [];
@@ -33,7 +34,10 @@ class _ViewScoutingInfoConfigurationState extends State<ViewScoutingInfoConfigur
   }
 
   Future<void> _openScoutingScreen(BuildContext context, Team team) async {
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ViewGeneralScouting(team: team)));
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ViewGeneralScouting(team: team)));
   }
 
   void _generateTeams() async {
@@ -46,20 +50,19 @@ class _ViewScoutingInfoConfigurationState extends State<ViewScoutingInfoConfigur
       try {
         if ((team.avatar ?? "") == "") {
           avatarImage = Image.memory(base64Decode(baseAvatar));
-        }
-        else {
+        } else {
           base64Decode(team.avatar!);
           avatarImage = Image.memory(base64Decode(team.avatar!));
         }
-      }
-      catch (e) {
+      } catch (e) {
         avatarImage = Image.memory(base64Decode(baseAvatar));
       }
 
       out.add(Container(
         child: InkWell(
           child: ListTile(
-            title: Text("${team.nickname ?? "No Name"} - ${team.city}, ${team.stateProv}"),
+            title: Text(
+                "${team.nickname ?? "No Name"} - ${team.city}, ${team.stateProv}"),
             leading: avatarImage,
             onTap: () {
               _openScoutingScreen(context, team);
@@ -78,7 +81,9 @@ class _ViewScoutingInfoConfigurationState extends State<ViewScoutingInfoConfigur
     List<Widget> out = [];
 
     for (Team team in _teamList) {
-      if (team.nickname!.toLowerCase().contains(_teamNameController.value.text.toLowerCase())) {
+      if (team.nickname!
+          .toLowerCase()
+          .contains(_teamNameController.value.text.toLowerCase())) {
         out.add(Container(
           child: InkWell(
             child: ListTile(
@@ -120,9 +125,7 @@ class _ViewScoutingInfoConfigurationState extends State<ViewScoutingInfoConfigur
                     controller: _teamNameController,
                     onChanged: (s) async {
                       _updateTeams();
-                      setState(() {
-
-                      });
+                      setState(() {});
                     },
                     decoration:
                         const InputDecoration(labelText: "Enter Team Name"),
