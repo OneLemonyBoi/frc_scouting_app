@@ -5,12 +5,14 @@ class StringDropDown extends StatefulWidget {
   final String name;
   final List<String> choices;
   late String currentChoice;
-  StringDropDown({
-    Key? key,
-    required this.name,
-    required this.callback,
-    required this.choices,
-  }) : super(key: key) {
+  final bool enabled;
+  StringDropDown(
+      {Key? key,
+      required this.name,
+      required this.callback,
+      required this.choices,
+      this.enabled = true})
+      : super(key: key) {
     currentChoice = choices.first;
   }
 
@@ -30,13 +32,15 @@ class _StringDropDownState extends State<StringDropDown> {
                   value: e,
                 ))
             .toList(),
-        onChanged: (String? s) {
-          setState(() {
-            widget.callback(s!);
-            widget.currentChoice = s;
-          });
-          print("onChange: " + widget.currentChoice);
-        },
+        onChanged: widget.enabled
+            ? (String? s) {
+                setState(() {
+                  widget.currentChoice = s!;
+                });
+                widget.callback(s!);
+                // print("onChange: " + widget.currentChoice);
+              }
+            : null,
         value: widget.currentChoice,
       ),
     );

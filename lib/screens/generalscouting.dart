@@ -1,7 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:frc_scouting_app/Team.dart';
-import 'package:frc_scouting_app/widgets.dart';
-import 'package:frc_scouting_app/DropdownListTile.dart';
+
+import 'package:flutter_svg/svg.dart';
+import 'package:frc_scouting_app/team.dart';
+import 'package:frc_scouting_app/widgets/BooleanListTile.dart';
+import 'package:frc_scouting_app/widgets/DropdownListTile.dart';
+import 'package:frc_scouting_app/widgets/NumberListTile.dart';
 
 class GeneralScouting extends StatefulWidget {
   Team team;
@@ -14,53 +18,82 @@ class GeneralScouting extends StatefulWidget {
 class _GeneralScoutingState extends State<GeneralScouting> {
   Map<String, dynamic> scoutingInfo = {
     "target": String,
-    "shooting_percentage": int,
+    "shooting-percentage": int,
     "shooting-range": String,
     "intake-system": String,
     "max-climb": String,
     "max-auto-balls": int,
-    "taxi": bool,
+    "taxi": false,
     "speed": String,
     "drivebase": String,
-    "defensive": bool,
+    "defensive": false,
     "width": int,
     "height": int,
     "weight": int,
     "language": String,
-    "comments": String
   };
   Team team;
+  bool enabled = false;
   _GeneralScoutingState(this.team);
+
+  Future<void> addToDatabase(bool enabled) async {
+    print(scoutingInfo.toString());
+    if (!enabled) {
+      FirebaseFirestore.instance
+          .collection("2022camb")
+          .doc("${widget.team.teamNumber}")
+          .set(scoutingInfo);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("${team.nickname}"),
+        actions: [
+          Container(
+            constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width * 0.175),
+            child: ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    enabled = !enabled;
+                  });
+                  addToDatabase(enabled);
+                },
+                child: SvgPicture.asset(
+                    "assets/${enabled ? "un" : ""}locked.svg")),
+          )
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             Container(
               child: StringDropDown(
-                  callback: (String value) {},
+                  enabled: enabled,
+                  callback: (String value) {
+                    scoutingInfo['target'] = value;
+                  },
                   name: "Hubs Shot At",
                   choices: const ["Lower", "Upper", "Neither", "Both"]),
               color: Colors.black54,
             ),
             Container(
               child: NumberListTile(
-                  team: team.teamNumber!,
-                  id: "shooting_percentage",
+                  callback: (double value) {
+                    scoutingInfo['shooting-percentage'] = value;
+                  },
+                  enabled: enabled,
                   name: "Shooting Percentage"),
               color: Colors.red.shade300,
             ),
             Container(
               child: StringDropDown(
+                  enabled: enabled,
                   callback: (String value) {
-                    // setState(() {
-                    //   scoutingInfo['shooting-range'] = value;
-                    // });
+                    scoutingInfo['shooting-range'] = value;
                     return value;
                   },
                   name: "Shooting Range",
@@ -75,10 +108,9 @@ class _GeneralScoutingState extends State<GeneralScouting> {
             ),
             Container(
               child: StringDropDown(
+                  enabled: enabled,
                   callback: (String value) {
-                    // setState(() {
-                    //   scoutingInfo['intake-system'] = value;
-                    // });
+                    scoutingInfo['intake-system'] = value;
                     return value;
                   },
                   name: "Intake System",
@@ -87,10 +119,9 @@ class _GeneralScoutingState extends State<GeneralScouting> {
             ),
             Container(
               child: StringDropDown(
+                  enabled: enabled,
                   callback: (String value) {
-                    // setState(() {
-                    //   scoutingInfo['max-climb'] = value;
-                    // });
+                    scoutingInfo['max-climb'] = value;
                     return value;
                   },
                   name: "Maximum Climb",
@@ -99,27 +130,28 @@ class _GeneralScoutingState extends State<GeneralScouting> {
             ),
             Container(
               child: NumberListTile(
-                  team: team.teamNumber!,
-                  id: "max_auto_balls",
-                  name: "Maximum Balls in Autonomous",
-                  min: 0,
-                  max: 10,
-                  acceleration: 0.1),
+                callback: (double value) {
+                  scoutingInfo['max-auto-balls'] = value;
+                },
+                enabled: enabled,
+                name: "Maximum Balls in Autonomous",
+              ),
               color: Colors.red.shade300,
             ),
             Container(
               child: BooleanListTile(
-                  team: team.teamNumber!,
-                  id: "auto_tarmac",
-                  name: "Robot leaves Tarmac during Autonomous"),
+                  enabled: enabled,
+                  callback: (bool value) {
+                    scoutingInfo['taxi'] = value;
+                  },
+                  name: "Robot Taxi"),
               color: Colors.black54,
             ),
             Container(
               child: StringDropDown(
+                  enabled: enabled,
                   callback: (String value) {
-                    // setState(() {
-                    //   scoutingInfo['speed'] = value;
-                    // });
+                    scoutingInfo['speed'] = value;
                     return value;
                   },
                   name: "Robot Speed",
@@ -128,10 +160,10 @@ class _GeneralScoutingState extends State<GeneralScouting> {
             ),
             Container(
               child: StringDropDown(
+                  enabled: enabled,
                   callback: (String value) {
-                    // setState(() {
-                    //   scoutingInfo['drivebase'] = value;
-                    // });
+                    scoutingInfo['drivebase'] = value;
+
                     return value;
                   },
                   name: "Robot Drivebase",
@@ -148,54 +180,52 @@ class _GeneralScoutingState extends State<GeneralScouting> {
             ),
             Container(
               child: BooleanListTile(
-                  team: team.teamNumber!,
-                  id: "is_defensive",
+                  callback: (bool value) {
+                    scoutingInfo['defensive'] = value;
+                  },
+                  enabled: enabled,
                   name: "Robot is Defensive"),
               color: Colors.red.shade300,
             ),
             Container(
               child: NumberListTile(
-                  team: team.teamNumber!,
-                  id: "robot_width",
-                  name: "Robot Width",
-                  min: 1,
-                  max: 40),
+                  callback: (double value) {
+                    scoutingInfo['width'] = value;
+                  },
+                  enabled: enabled,
+                  name: "Robot Width"),
               color: Colors.black54,
             ),
             Container(
               child: NumberListTile(
-                  team: team.teamNumber!,
-                  id: "robot_height",
-                  name: "Robot Height",
-                  min: 1,
-                  max: 40),
+                callback: (double value) {
+                  scoutingInfo['height'] = value;
+                },
+                enabled: enabled,
+                name: "Robot Height",
+              ),
               color: Colors.red.shade300,
             ),
             Container(
               child: NumberListTile(
-                  team: team.teamNumber!,
-                  id: "robot_weight",
-                  name: "Robot Weight",
-                  min: 1,
-                  max: 125,
-                  acceleration: 0.3),
+                callback: (double value) {
+                  scoutingInfo['weight'] = value;
+                },
+                enabled: enabled,
+                name: "Robot Weight",
+              ),
               color: Colors.black54,
             ),
             Container(
               child: StringDropDown(
-                  callback: (String value) {},
+                  enabled: enabled,
+                  callback: (String value) {
+                    scoutingInfo['language'] = value;
+                  },
                   name: "Programming Language",
                   choices: const ["Java", "C/C++", "Labview", "Python"]),
               color: Colors.red.shade300,
             ),
-            Container(
-              child: ParagraphListTile(
-                team: team.teamNumber!,
-                id: "comments",
-                label: "Enter Additional Comments",
-              ),
-              color: Colors.black54,
-            )
           ],
         ),
       ),
