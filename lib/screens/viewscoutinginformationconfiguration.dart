@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -7,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:frc_scouting_app/backend/api.dart';
 import 'package:frc_scouting_app/constants.dart';
 import 'package:frc_scouting_app/models/event.dart';
-import 'package:frc_scouting_app/screens/generalscouting.dart';
 import 'package:frc_scouting_app/screens/viewgeneralscouting.dart';
 import 'package:frc_scouting_app/team.dart';
 
@@ -61,8 +59,7 @@ class _ViewScoutingInfoConfigurationState
       out.add(Container(
         child: InkWell(
           child: ListTile(
-            title: Text(
-                "${team.nickname ?? "No Name"} - ${team.city}, ${team.stateProv}"),
+            title: Text("${team.nickname ?? "No Name"} - ${team.city}, ${team.stateProv}"),
             leading: avatarImage,
             onTap: () {
               _openScoutingScreen(context, team);

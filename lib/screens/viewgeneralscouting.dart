@@ -16,21 +16,21 @@ class _ViewGeneralScoutingState extends State<ViewGeneralScouting> {
   Map<String, dynamic> teamInfo = {};
   bool loading = true;
 
-  Map<String, List<String>> fancyDetails = {
-    "target": ["Hubs Shot At", "The hubs shot at by the robot/human"],
-    "shooting-percentage": ["Shooting Percentage", "The approximate shooting percentage of the robot/human"],
-    "shooting-range": ["Shooting Range", "The shooting range of the robot"],
+  // Name: [Long Name, Information, Suffix]
+  Map<String, List<String>> formatMap = {
+    "target": ["Hubs Shot At", "The hubs shot at by the robot/human", " Hub(s)"],
+    "shooting-range": ["Shooting Range", "The shooting range of the robot", ""],
+    "max-climb": ["Maximum Climb", "The maximum potential climb for the robot", ""],
     "intake-system": ["Intake System", "If intake is done by robot or human player"],
-    "max-climb": ["Maximum Climb", "The maximum potential climb for the robot"],
-    "max-auto-balls": ["Maximum Ball Auto", "The maximum amount of balls shot in auto"],
-    "taxi": ["Taxi", "If the robot can taxi"],
-    "speed": ["Speed", "The speed of the robot"],
-    "drivebase": ["Drivebase", "The drivebase of the robt"],
-    "defensive": ["Defensive", "If the robot is defensive"],
-    "width": ["Robot Width", "Width of the robot's base"],
-    "height": ["Robot Height", "Height of the robot's base"],
-    "weight":  ["Robot Weight", "Weight of the robot"],
-    "language": ["Robot Programming Language", "The robot's programming language"],
+    "max-auto-balls": ["Maximum Ball Auto", "The maximum amount of balls shot in auto", " Balls"],
+    "taxi": ["Taxi", "If the robot can taxi", ""],
+    "speed": ["Speed", "The speed of the robot", ""],
+    "drivebase": ["Drivebase", "The drivebase of the robot", ""],
+    "defensive": ["Defensive Specialist", "If the robot specializes in defensive", ""],
+    "width": ["Robot Width", "Width of the robot's base", " Inches"],
+    "height": ["Robot Height", "Height of the robot's base", "Inches"],
+    "weight":  ["Robot Weight", "Weight of the robot", "Pounds"],
+    "language": ["Robot Programming Language", "The robot's programming language", ""],
   };
 
   Future<void> getTeamData() async {
@@ -57,6 +57,7 @@ class _ViewGeneralScoutingState extends State<ViewGeneralScouting> {
   @override
   Widget build(BuildContext context) {
     String filler = "FRC Team ${widget.team.key?.substring(3)}";
+    List infoList = teamInfo.keys.toList();
 
     return Scaffold(
         appBar: AppBar(
@@ -66,7 +67,7 @@ class _ViewGeneralScoutingState extends State<ViewGeneralScouting> {
             ? !loading
                 ? GridView.builder(
                     padding: const EdgeInsets.all(10),
-                    itemCount: 13,
+                    itemCount: 12,
                     gridDelegate:
                         const SliverGridDelegateWithMaxCrossAxisExtent(
                             maxCrossAxisExtent: 250,
@@ -74,9 +75,10 @@ class _ViewGeneralScoutingState extends State<ViewGeneralScouting> {
                             crossAxisSpacing: 20,
                             mainAxisSpacing: 20),
                     itemBuilder: (ctx, i) {
-                      String tooltip = fancyDetails.keys.contains(teamInfo.keys.toList()[i]) ? fancyDetails[teamInfo.keys.toList()[i]]![1] as String : teamInfo.keys.toList()[i];
-                      String title = fancyDetails.keys.contains(teamInfo.keys.toList()[i]) ? fancyDetails[teamInfo.keys.toList()[i]]![0] as String : teamInfo.keys.toList()[i];
-                      bool disabled = teamInfo.values.toList()[i] == null;
+                      var infoName = infoList[i];
+                      String tooltip = formatMap.keys.contains(infoName) ? formatMap[infoName]![1] : infoName;
+                      String title = formatMap.keys.contains(infoName) ? formatMap[infoName]![0] : infoName;
+                      bool disabled = infoName == null;
 
                       return Tooltip(
                         message: tooltip,
@@ -88,21 +90,13 @@ class _ViewGeneralScoutingState extends State<ViewGeneralScouting> {
                         verticalOffset: 20,
                         child: Card(
                           color: disabled ? Colors.black12 : Colors.white,
-                          child: InkWell(
-                            onTap: !disabled ? () {
-                              openInfoDialogueBox(
-                                  context,
-                                  "$filler - $title",
-                                  "${teamInfo.values.toList()[i]}");
-                            } : null,
-                            child: Center(
-                              child: Text(
-                                title,
-                                style: const TextStyle(
-                                  fontSize: 24,
-                                ),
-                                textAlign: TextAlign.center,
+                          child: Center(
+                            child: Text(
+                              "$title - ${teamInfo[infoName]}",
+                              style: const TextStyle(
+                                fontSize: 16,
                               ),
+                              textAlign: TextAlign.center,
                             ),
                           ),
                         ),
@@ -112,38 +106,6 @@ class _ViewGeneralScoutingState extends State<ViewGeneralScouting> {
             : const Center(
                 child: Text("This team is yet to be scouted!"),
               )
-
-        // GridView.count(
-        //   crossAxisCount: 2,
-        //   childAspectRatio: 2,
-        //   children: [
-        //     GriddedCardEntry(
-        //         text: "Hubs Shot At",
-        //         onTap: () {
-        //           openInfoDialogueBox(
-        //               context, "$filler Hubs Shot At", "[insert firebase call]");
-        //         },
-        //         message: "Hubs the Robot Shoots at"),
-        //     GriddedCardEntry(
-        //         text: "ok1",
-        //         onTap: () {
-        //           openInfoDialogueBox(context, "ok1", "hola");
-        //         },
-        //         message: ""),
-        //     GriddedCardEntry(
-        //         text: "ok2",
-        //         onTap: () {
-        //           openInfoDialogueBox(context, "ok2", "hola");
-        //         },
-        //         message: ""),
-        //     GriddedCardEntry(
-        //         text: "ok3",
-        //         onTap: () {
-        //           openInfoDialogueBox(context, "ok3", "hola");
-        //         },
-        //         message: "")
-        //   ],
-        // ),
         );
   }
 }

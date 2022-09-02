@@ -19,9 +19,7 @@ class GeneralScouting extends StatefulWidget {
 class _GeneralScoutingState extends State<GeneralScouting> {
   Map<String, dynamic> scoutingInfo = {
     "target": null,
-    "shooting-percentage": null,
     "shooting-range": null,
-    "intake-system": null,
     "max-climb": null,
     "max-auto-balls": null,
     "taxi": false,
@@ -35,6 +33,7 @@ class _GeneralScoutingState extends State<GeneralScouting> {
   };
   Team team;
   bool enabled = false;
+  bool loaded = false;
   _GeneralScoutingState(this.team);
 
   Future<void> addToDatabase(bool enabled) async {
@@ -62,15 +61,31 @@ class _GeneralScoutingState extends State<GeneralScouting> {
     if (vals.data() != null) {
       for (var infoPoint in scoutingInfo.entries) {
         if (vals.data()!.containsKey(infoPoint.key)) {
-          scoutingInfo.update(infoPoint.key, (value) => vals.get(infoPoint.key));
+          setState(() {
+            scoutingInfo.update(infoPoint.key, (value) => vals.get(infoPoint.key));
+            loaded = true;
+          });
         }
       }
     }
+    setState(() {
+      loaded = true;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
+    return !loaded ? Scaffold(
+        appBar: AppBar(
+            title: Text("${team.nickname}")
+        ),
+        body: Center(
+            child: Transform.scale(
+                scale: 3,
+                child: const CircularProgressIndicator()
+            )
+        )
+    ) : WillPopScope(
       onWillPop: () async {
         openDecisionBox(context, "Save Screen", "Do you want to save your changes?", "Save",
           () {
@@ -120,17 +135,6 @@ class _GeneralScoutingState extends State<GeneralScouting> {
                 color: Colors.black54,
               ),
               Container(
-                child: NumberListTile(
-                  callback: (double value) {
-                    scoutingInfo['shooting-percentage'] = value;
-                  },
-                  enabled: enabled,
-                  name: "Shooting Percentage",
-                  currentValue: scoutingInfo['shooting-percentage']
-                ),
-                color: Colors.red.shade300,
-              ),
-              Container(
                 child: StringDropDown(
                     enabled: enabled,
                     callback: (String value) {
@@ -147,7 +151,7 @@ class _GeneralScoutingState extends State<GeneralScouting> {
                     ],
                     currentChoice: scoutingInfo['shooting-range'],
                 ),
-                color: Colors.black54,
+                color: Colors.red.shade300,
               ),
               Container(
                 child: StringDropDown(
@@ -160,7 +164,7 @@ class _GeneralScoutingState extends State<GeneralScouting> {
                     choices: const ["None", "Human Player", "Robot", "Both"],
                   currentChoice: scoutingInfo['intake-system'],
                 ),
-                color: Colors.red.shade300,
+                color: Colors.black54,
               ),
               Container(
                 child: StringDropDown(
@@ -173,7 +177,7 @@ class _GeneralScoutingState extends State<GeneralScouting> {
                     choices: const ["None", "Low", "Mid", "High", "Traversal"],
                   currentChoice: scoutingInfo['max-climb'],
                 ),
-                color: Colors.black54,
+                color: Colors.red.shade300,
               ),
               Container(
                 child: NumberListTile(
@@ -184,7 +188,7 @@ class _GeneralScoutingState extends State<GeneralScouting> {
                   name: "Maximum Balls in Autonomous",
                   currentValue: scoutingInfo['max-auto-balls'],
                 ),
-                color: Colors.red.shade300,
+                color: Colors.black54,
               ),
               Container(
                 child: BooleanListTile(
@@ -195,7 +199,7 @@ class _GeneralScoutingState extends State<GeneralScouting> {
                     name: "Robot Taxi",
                     currentValue: scoutingInfo['taxi'],
                 ),
-                color: Colors.black54,
+                color: Colors.red.shade300,
               ),
               Container(
                 child: StringDropDown(
@@ -208,7 +212,7 @@ class _GeneralScoutingState extends State<GeneralScouting> {
                     choices: const ["Slow", "Medium", "Fast", "Blazing Fast"],
                     currentChoice: scoutingInfo['speed'],
                 ),
-                color: Colors.red.shade300,
+                color: Colors.black54,
               ),
               Container(
                 child: StringDropDown(
@@ -230,7 +234,7 @@ class _GeneralScoutingState extends State<GeneralScouting> {
                     ],
                     currentChoice: scoutingInfo['drivebase'],
                 ),
-                color: Colors.black54,
+                color: Colors.red.shade300,
               ),
               Container(
                 child: BooleanListTile(
@@ -241,7 +245,7 @@ class _GeneralScoutingState extends State<GeneralScouting> {
                     name: "Robot is Defensive",
                     currentValue: scoutingInfo['defensive'],
                 ),
-                color: Colors.red.shade300,
+                color: Colors.black54,
               ),
               Container(
                 child: NumberListTile(
@@ -252,7 +256,7 @@ class _GeneralScoutingState extends State<GeneralScouting> {
                     name: "Robot Width",
                     currentValue: scoutingInfo['width'],
                 ),
-                color: Colors.black54,
+                color: Colors.red.shade300,
               ),
               Container(
                 child: NumberListTile(
@@ -263,7 +267,7 @@ class _GeneralScoutingState extends State<GeneralScouting> {
                   name: "Robot Height",
                   currentValue: scoutingInfo['height'],
                 ),
-                color: Colors.red.shade300,
+                color: Colors.black54,
               ),
               Container(
                 child: NumberListTile(
@@ -274,7 +278,7 @@ class _GeneralScoutingState extends State<GeneralScouting> {
                   name: "Robot Weight",
                   currentValue: scoutingInfo['weight'],
                 ),
-                color: Colors.black54,
+                color: Colors.red.shade300,
               ),
               Container(
                 child: StringDropDown(
@@ -286,7 +290,7 @@ class _GeneralScoutingState extends State<GeneralScouting> {
                     choices: const ["Java", "C/C++", "Labview", "Python"],
                     currentChoice: scoutingInfo['language'],
                 ),
-                color: Colors.red.shade300,
+                color: Colors.black54,
               ),
             ],
           ),

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -5,6 +7,7 @@ import 'package:frc_scouting_app/backend/api.dart';
 import 'package:frc_scouting_app/models/event.dart';
 import 'package:frc_scouting_app/screens/generalscouting.dart';
 import 'package:frc_scouting_app/team.dart';
+import 'package:frc_scouting_app/constants.dart';
 
 class GeneralScoutingConfiguration extends StatefulWidget {
   Event? event;
@@ -19,6 +22,7 @@ class _GeneralScoutingConfigurationState extends State<GeneralScoutingConfigurat
   final TextEditingController _teamNameController = TextEditingController();
   List<Team> _teamList = [];
   List<Widget> _foundTeams = [];
+  bool loaded = false;
 
   @override
   void initState() {
@@ -37,14 +41,26 @@ class _GeneralScoutingConfigurationState extends State<GeneralScoutingConfigurat
     _teamList = await getTeamsFromEvent(widget.event?.key ?? "");
 
     for (Team team in _teamList) {
+      Widget avatarImage;
+      try {
+        if ((team.avatar ?? "") == "") {
+          avatarImage = Image.memory(base64Decode(baseAvatar));
+        } else {
+          base64Decode(team.avatar!);
+          avatarImage = Image.memory(base64Decode(team.avatar!));
+        }
+      } catch (e) {
+        avatarImage = Image.memory(base64Decode(baseAvatar));
+      }
+
       out.add(Container(
         child: InkWell(
           child: ListTile(
-            title: Text(team.nickname ?? "No Name"),
+            title: Text("${team.nickname ?? "No Name"} - ${team.city}, ${team.stateProv}"),
+            leading: avatarImage,
             onTap: () {
               _openScoutingScreen(context, team);
             },
-
           ),
         ),
       ));
@@ -52,6 +68,7 @@ class _GeneralScoutingConfigurationState extends State<GeneralScoutingConfigurat
 
     setState(() {
       _foundTeams = out;
+      loaded = true;
     });
   }
 
@@ -82,7 +99,17 @@ class _GeneralScoutingConfigurationState extends State<GeneralScoutingConfigurat
   Widget build(BuildContext context) {
     widget.event = ModalRoute.of(context)!.settings.arguments as Event;
 
-    return Scaffold(
+    return !loaded ? Scaffold(
+        appBar: AppBar(
+            title: const Text("Scouting App")
+        ),
+        body: Center(
+            child: Transform.scale(
+                scale: 3,
+                child: const CircularProgressIndicator()
+            )
+        )
+    ) : Scaffold(
       appBar: AppBar(
         title: const Text("Scouting App"),
       ),
